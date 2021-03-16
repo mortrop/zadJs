@@ -14,58 +14,6 @@ var con = mysql.createConnection({
   database: 'baza1'
 });
 
-// con.connect(function(err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-// });
-
-// con.connect(function(err) {
-//     if (err) throw err;
-//     console.log("Connected!");
-//     var sql = "CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))";
-//     con.query(sql, function (err, result) {
-//       if (err) throw err;
-//       console.log("Table created");
-//     });
-    
-//     sql = "INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')";
-//     con.query(sql, function (err, result) {
-//         if (err) throw err;
-//         console.log("1 record inserted");
-//     });
-
-//     con.query("SELECT * FROM customers", function (err, result, fields) {
-//         if (err) throw err;
-//         console.log(result);
-//     });
-
-//     var sql = "INSERT INTO customers (name, address) VALUES ?";
-//     var values = [
-//         ['John', 'Highway 71'],
-//         ['Peter', 'Lowstreet 4'],
-//         ['Amy', 'Apple st 652'],
-//         ['Hannah', 'Mountain 21'],
-//         ['Michael', 'Valley 345'],
-//         ['Sandy', 'Ocean blvd 2'],
-//         ['Betty', 'Green Grass 1'],
-//         ['Richard', 'Sky st 331'],
-//         ['Susan', 'One way 98'],
-//         ['Vicky', 'Yellow Garden 2'],
-//         ['Ben', 'Park Lane 38'],
-//         ['William', 'Central st 954'],
-//         ['Chuck', 'Main Road 989'],
-//         ['Viola', 'Sideway 1633']
-//     ];
-//     con.query(sql, [values], function (err, result) {
-//         if (err) throw err;
-//         console.log("Number of records inserted: " + result.affectedRows);
-//     });
-
-//     // con.query("SELECT * FROM customers WHERE address = 'Park Lane 38'", function (err, result) {
-//     //     if (err) throw err;
-//     //     console.log(result);
-//     // });
-//   });
 
 
 app.get('/addPupil/:id/:name/:surname/:pesel/:class', function(request, response){
@@ -102,7 +50,7 @@ app.get('/showTeacher', function(request, response){
         if (err) throw err;
         console.log(result);
     });
-    return response.send('Record succesfully inserted')
+    return result
 })
 
 app.get('/addSubject/:id/:name', function(request, response){
@@ -120,7 +68,7 @@ app.get('/showSubjects', function(request, response){
         if (err) throw err;
         console.log(result);
     });
-    return response.send('Record succesfully inserted')
+    return result
 })
 
 app.get('/addGrade/:id/:value/:weight', function(request, response){
@@ -138,7 +86,15 @@ app.get('/showGrades', function(request, response){
         if (err) throw err;
         console.log(result);
     });
-    return response.send('Record succesfully inserted')
+    return response.send('R')
+})
+
+app.get('/showGrades2', function(request, response){
+    con.query("SELECT value FROM Grade WHERE weight >= 2", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+    });
+    return response.send('R')
 })
 
 app.get('/addPupilSubject/:id_pupil/:id_subject', function(request, response){
@@ -176,6 +132,32 @@ app.get('/showPupilTeacher', function(request, response){
     });
     return response.send('Record succesfully inserted')
 })
+
+
+
+app.get('/removePupil/:id', (request, response) => {
+    let id = request.params.id
+    let sql = 'DELETE FROM Pupil WHERE pupil_id = ?';
+    con.query(sql,id, (err, result) => {
+        if (err) throw err
+        console.log("pupil removed")
+        return response.send('Pupil removed successfully')
+    }) 
+})
+app.get('/removeTeacher/:id', (request, response) => {
+    let id = request.params.id
+    let sql = 'DELETE FROM Teacher WHERE teacher_id = ?';
+    con.query(sql,id, (err, result) => {
+        if (err) throw err
+        console.log("teacher removed")
+        return response.send('Teachr removed successfully')
+    }) 
+})
+
+
+
+
+
 
 app.listen(3000, function() { // odpalenie serwera i nasłuchiwanie na port 3000
     console.log('Server is listening on port 3000'); 
